@@ -7,7 +7,7 @@ Solves the WORDLE game.
    close your guess was to the word.
 
 Author: John Q
-Date: 4 February 2022
+Date: 1 July 2022
 """
 
 
@@ -141,6 +141,20 @@ def is_valid(w, a, r, debug=False):
     return True    # Word is valid => return True
 
 
+def is_in_wordle_list(g, debug=False):
+    "Checks if the guess is in the Wordle word list using user input."
+
+    print('')
+    print('Is the word: ' + str(g).upper() + ' in the Wordle word list?')
+
+    opt = str(input('Y/N: ')).upper()
+
+    if opt == 'Y' or opt == 'YES':
+        return True
+    elif opt == 'N' or opt == 'NO':
+        return False
+
+
 if __name__ == "__main__":
     # Set debug
     debug = False
@@ -158,21 +172,28 @@ if __name__ == "__main__":
     # Initialize the emoji string
     emoji_str = ''
 
-    # Get the user to make the first guess
-    #guess = input('Please enter the initial guess: ')
-
-    # Convert the guess to uppercase
-    #guess = guess.upper()
-
-    #print('')
-
-    # Hard-code the first guess to 'ADIEU'
-    guess = 'ADIEU'
+    # Generate guesses
+    guesses = list_valid_words(answer, req_letters, debug)
 
     # Initialize the number of attempts
     trys = 1
 
     while trys <= 6:
+        # Check if the guess is in the Wordle word list
+        for guess in guesses:
+            if trys == 1:
+                # Hard-code the first guess to 'ADIEU'
+                guess = 'ADIEU'
+                # Break out of the loop
+                break
+            elif is_in_wordle_list(guess):
+                # The guess is in the word list
+                guess = guess.upper()
+                # Break out of the loop
+                break
+            else:
+                continue
+
         print('')
         print('Guess Number ' + str(trys) + ': ' + guess)
         print('---------------------')
@@ -194,9 +215,6 @@ if __name__ == "__main__":
             print('No More Guesses...')
             trys = 9
             break
-
-        # Use the first guess - for now...
-        guess = guesses[0].upper()
 
         # Increment the number of attempts
         trys += 1
