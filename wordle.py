@@ -7,7 +7,7 @@ Solves the WORDLE game.
    close your guess was to the word.
 
 Author: John Q
-Date: 1 July 2022
+Date: 30 December 2023
 """
 
 
@@ -17,7 +17,7 @@ import pprint
 
 
 def check_guess(g, a, r, e, debug=False):
-    "Checks the guess using user input."
+    """Checks the guess using user input."""
 
     print('Is the letter:')
     print(' 1) In the word and in the correct spot?')
@@ -35,45 +35,51 @@ def check_guess(g, a, r, e, debug=False):
 
         # If the position is unknown, then check it
         else:
-            # Ask the user
-            opt = int(input(g[i] + '?: '))
+            opt_valid = False
+            while opt_valid == False:
+                # Ask the user
+                opt = input(g[i] + '?: ')
 
-            if opt == 1:
-                # This letter is correct in this position
-                a[i] = [g[i]]
-                # Add the letter to the list of required letters
-                if g[i] not in r:
-                    r.append(g[i])
-                # Update the emoji string
-                e += ':green_square:'
+                if opt == '1':
+                    opt_valid = True
+                    # This letter is correct in this position
+                    a[i] = [g[i]]
+                    # Add the letter to the list of required letters
+                    if g[i] not in r:
+                        r.append(g[i])
+                    # Update the emoji string
+                    e += ':green_square:'
             
-            elif opt == 2:
-                # This letter is incorrect in this position
-                if g[i] in a[i]:
-                    a[i].remove(g[i])
-                # The letter still needs to be somewhere in the word
-                # So add it to the list of required letters
-                if g[i] not in r:
-                    r.append(g[i])
-                # Update the emoji string
-                e += ':yellow_square:'
+                elif opt == '2':
+                    opt_valid = True
+                    # This letter is incorrect in this position
+                    if g[i] in a[i]:
+                        a[i].remove(g[i])
+                    # The letter still needs to be somewhere in the word
+                    # So add it to the list of required letters
+                    if g[i] not in r:
+                        r.append(g[i])
+                    # Update the emoji string
+                    e += ':yellow_square:'
             
-            elif opt == 3:
-                # This letter is correct in no positions
-                if g[i] in a[0]:
-                    a[0].remove(g[i])
-                if g[i] in a[1]:
-                    a[1].remove(g[i])
-                if g[i] in a[2]:
-                    a[2].remove(g[i])
-                if g[i] in a[3]:
-                    a[3].remove(g[i])
-                if g[i] in a[4]:
-                    a[4].remove(g[i])
-                # Update the emoji string
-                e += ':black_large_square:'
-            else:
-                print('ERROR!')
+                elif opt == '3':
+                    opt_valid = True
+                    # This letter is correct in no positions
+                    if g[i] in a[0]:
+                        a[0].remove(g[i])
+                    if g[i] in a[1]:
+                        a[1].remove(g[i])
+                    if g[i] in a[2]:
+                        a[2].remove(g[i])
+                    if g[i] in a[3]:
+                        a[3].remove(g[i])
+                    if g[i] in a[4]:
+                        a[4].remove(g[i])
+                    # Update the emoji string
+                    e += ':black_large_square:'
+                
+                else:
+                    print('\'' + opt + '\' is not a valid response!')
 
     # Update the emoji string
     e += '\n'
@@ -89,7 +95,7 @@ def check_guess(g, a, r, e, debug=False):
 
 
 def list_valid_words(a, r, debug=False):
-    "Compiles a list of words that are valid answers."
+    """Compiles a list of words that are valid answers."""
 
     dictionary_filename = 'words.json'
 
@@ -142,17 +148,26 @@ def is_valid(w, a, r, debug=False):
 
 
 def is_in_wordle_list(g, debug=False):
-    "Checks if the guess is in the Wordle word list using user input."
+    """Checks if the guess is in the Wordle word list using user input."""
 
-    print('')
-    print('Is the word: ' + str(g).upper() + ' in the Wordle word list?')
+    answer = None
+    opt_valid = False
+    while opt_valid == False:
+        print('')
+        print('Is the word: ' + str(g).upper() + ' in the Wordle word list?')
 
-    opt = str(input('Y/N: ')).upper()
+        opt = str(input('Y/N: '))
 
-    if opt == 'Y' or opt == 'YES':
-        return True
-    elif opt == 'N' or opt == 'NO':
-        return False
+        if opt.upper() == 'Y' or opt.upper() == 'YES':
+            opt_valid = True
+            answer = True
+        elif opt.upper() == 'N' or opt.upper() == 'NO':
+            opt_valid = True
+            answer = False
+        else:
+            print('\'' + opt + '\' is not a valid response!')
+
+    return answer
 
 
 if __name__ == "__main__":
@@ -164,7 +179,7 @@ if __name__ == "__main__":
               1:['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],\
               2:['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],\
               3:['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],\
-              4:['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],}
+              4:['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']}
 
     # Initialize a list of the required letters
     req_letters = []
@@ -209,7 +224,7 @@ if __name__ == "__main__":
         # Generate new guesses
         guesses = list_valid_words(answer, req_letters, debug)
 
-        # 
+        # Check if there are no more guesses left
         if len(guesses) == 0:
             print('')
             print('No More Guesses...')
